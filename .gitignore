@@ -43,3 +43,4 @@ env.bak/
 venv.bak/
 atari_data
 **/*.pyc
+slurm_scripts/
