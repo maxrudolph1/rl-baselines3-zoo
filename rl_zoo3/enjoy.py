@@ -15,10 +15,13 @@ from rl_zoo3 import ALGOS, create_test_env, get_saved_hyperparams
 from rl_zoo3.exp_manager import ExperimentManager
 from rl_zoo3.load_from_hub import download_from_hub
 from rl_zoo3.utils import StoreDict, get_model_path
+import time
+from collections import defaultdict
 
 
 def enjoy() -> None:  # noqa: C901
     parser = argparse.ArgumentParser()
+    
     parser.add_argument("--env", help="environment ID", type=EnvironmentName, default="CartPole-v1")
     parser.add_argument("-f", "--folder", help="Log folder", type=str, default="rl-trained-agents")
     parser.add_argument("--algo", help="RL Algorithm", default="ppo", type=str, required=False, choices=list(ALGOS.keys()))
@@ -223,15 +226,26 @@ def enjoy() -> None:  # noqa: C901
         generator = tqdm(generator)
 
     try:
+        trajectory_data = defaultdict(list) # obs, action, reward, done, info
+        start_time = time.time()
         for _ in generator:
+                        
+        
             action, lstm_states = model.predict(
                 obs,  # type: ignore[arg-type]
                 state=lstm_states,
                 episode_start=episode_start,
                 deterministic=deterministic,
             )
-            obs, reward, done, infos = env.step(action)
+            trajectory_data["obs"].append(obs)
+            trajectory_data["action"].append(action)
 
+            
+            obs, reward, done, infos = env.step(action)
+            trajectory_data["reward"].append(reward)
+            trajectory_data["done"].append(done)
+            trajectory_data["info"].append(infos)
+            
             episode_start = done
 
             if not args.no_render:
@@ -267,6 +281,8 @@ def enjoy() -> None:  # noqa: C901
                     if infos[0].get("is_success") is not None:
                         successes.append(infos[0].get("is_success", False))
                         episode_reward, ep_len = 0.0, 0
+                        
+        end_time = time.time()
 
     except KeyboardInterrupt:
         pass
@@ -281,6 +297,13 @@ def enjoy() -> None:  # noqa: C901
     if args.verbose > 0 and len(episode_lengths) > 0:
         print(f"Mean episode length: {np.mean(episode_lengths):.2f} +/- {np.std(episode_lengths):.2f}")
 
+    if args.verbose > 0 and end_time - start_time > 0:
+        print(f"Time taken: {end_time - start_time:.2f} seconds")
+        print(f"fps: {args.n_timesteps / (end_time - start_time):.2f}")
+        
+    trajectory_data = {k: np.array(v) for k, v in trajectory_data.items()}
+    th.save(trajectory_data, f"atari_data/{algo}_{env_name}_{args.exp_id}_{args.n_timesteps}.pth")
+        
     env.close()
 
 
