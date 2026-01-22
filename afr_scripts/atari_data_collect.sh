@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Parameters
 #SBATCH --account=amyzhang
 #SBATCH --cpus-per-task=16
@@ -13,23 +11,23 @@
 #SBATCH --partition=allnodes
 #SBATCH --time=1200
 
-source /u/mrudolph/miniconda3/etc/profile.d/conda.sh
-conda activate rlzoo
+# source /u/mrudolph/miniconda3/etc/profile.d/conda.sh
+# conda activate rlzoo
 
 # games
-STEP=100000
+STEP=1001
 
 # GAME=BreakoutNoFrameskip-v4
-# GAME=AsteroidsNoFrameskip-v4
+GAME=AsteroidsNoFrameskip-v4
 # GAME=BeamRiderNoFrameskip-v4
 # GAME=EnduroNoFrameskip-v4
 # GAME=PongNoFrameskip-v4
 # GAME=QbertNoFrameskip-v4
 # GAME=SeaquestNoFrameskip-v4
 # GAME=SpaceInvadersNoFrameskip-v4
-GAME=RoadRunnerNoFrameskip-v4
+# GAME=RoadRunnerNoFrameskip-v4
 
 python enjoy.py --algo a2c --env $GAME --folder rl-trained-agents/ -n $STEP
-python enjoy.py --algo dqn --env $GAME --folder rl-trained-agents/ -n $STEP
-python enjoy.py --algo ppo --env $GAME --folder rl-trained-agents/ -n $STEP
-python enjoy.py --algo qrdqn --env $GAME --folder rl-trained-agents/ -n $STEP
+# python enjoy.py --algo dqn --env $GAME --folder rl-trained-agents/ -n $STEP
+# python enjoy.py --algo ppo --env $GAME --folder rl-trained-agents/ -n $STEP
+# python enjoy.py --algo qrdqn --env $GAME --folder rl-trained-agents/ -n $STEP

@@ -135,7 +135,6 @@ def enjoy() -> None:  # noqa: C901
         if args.verbose > 1:
             print(f"Setting torch.num_threads to {args.num_threads}")
         th.set_num_threads(args.num_threads)
-
     is_atari = ExperimentManager.is_atari(env_name.gym_id)
     is_minigrid = ExperimentManager.is_minigrid(env_name.gym_id)
 

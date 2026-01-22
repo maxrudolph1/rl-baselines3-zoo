@@ -1,8 +1,8 @@
 import torch
 import matplotlib.pyplot as plt
 import numpy as np
-
-data = torch.load("a2c_BreakoutNoFrameskip-v4_0_5000.pth", weights_only=False)
+path = '/u/mrudolph/documents/rl-baselines3-zoo/atari_data/a2c_BreakoutNoFrameskip-v4_0_10000.pth'
+data = torch.load(path, weights_only=False)
 actions = data["action"]
 obs = data["obs"]
 first_obs = obs[3, 0]  # shape: (84,84,4)

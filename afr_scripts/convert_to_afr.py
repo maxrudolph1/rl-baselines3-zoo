@@ -16,7 +16,9 @@ def find_pth_files(directory):
 # directory_path = "/your/directory/here"
 # all_paths = find_pth_files(directory_path)
 
-all_paths = find_pth_files('/u/mrudolph/documents/rl-baselines3-zoo/atari_data/unconverted_files')
+all_paths = find_pth_files('/u/mrudolph/documents/rl-baselines3-zoo/atari_data')
+
+all_paths = ['/u/mrudolph/documents/rl-baselines3-zoo/atari_data/a2c_BreakoutNoFrameskip-v4_0_10000.pth']
 
 train_split = 0.9
 
@@ -34,6 +36,7 @@ for atari_path in all_paths:
         "background_id": np.zeros_like(atari_data['reward'].squeeze()),
         "state": np.zeros_like(atari_data['reward'].squeeze()),
         "step_type": np.zeros_like(atari_data['reward'].squeeze()),
+        "done": atari_data['done'].squeeze(),
     }
 
     algo = atari_path.split('/')[-1].split('_')[0]
